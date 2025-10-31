@@ -1934,4 +1934,1085 @@ public class LibraryTest {
         }
         assertTrue(seenTrue && seenFalse);
     }
+
+    /** ========================== CreditRepairService 变异杀死专项测试 ========================== */
+    // 杀死第8行：payment < 10 边界变异 - payment == 10 应该成功
+    @Test
+    public void testCreditRepairService_PaymentExactly10_ShouldSucceed() throws Exception {
+        CreditRepairService crs = new CreditRepairService();
+        RegularUser user = new RegularUser("CRS_10", "CRS10");
+        user.creditScore = 50;
+        int before = user.getCreditScore();
+        crs.repairCredit(user, 10.0); // 边界：恰好10元应该成功
+        assertEquals(before + 1, user.getCreditScore()); // 10/10 = 1分
+    }
+
+    // 杀死第8行：payment < 10 边界变异 - payment == 9.99 应该抛异常
+    @Test
+    public void testCreditRepairService_PaymentJustBelow10_ShouldThrow() {
+        CreditRepairService crs = new CreditRepairService();
+        RegularUser user = new RegularUser("CRS_9", "CRS9");
+        try {
+            crs.repairCredit(user, 9.99);
+            fail("支付小于10应抛InvalidOperationException");
+        } catch (InvalidOperationException e) {
+            assertEquals("The minimum payment amount is 10 yuan.", e.getMessage());
+        } catch (Exception e) {
+            fail("异常类型错误");
+        }
+    }
+
+    // 杀死第11行：除法改为乘法变异 - 精确断言加分计算
+    @Test
+    public void testCreditRepairService_PaymentCalculation_ExactDivision() throws Exception {
+        CreditRepairService crs = new CreditRepairService();
+        RegularUser user = new RegularUser("CRS_DIV", "CRSD");
+        user.creditScore = 40;
+        int before = user.getCreditScore();
+        // 支付50元应该加 50/10=5分（如果是乘法会变成50*10=500分）
+        crs.repairCredit(user, 50.0);
+        assertEquals(before + 5, user.getCreditScore()); // 精确断言加5分
+        // 再次测试：支付30元应该加3分
+        before = user.getCreditScore();
+        crs.repairCredit(user, 30.0);
+        assertEquals(before + 3, user.getCreditScore()); // 精确断言加3分
+    }
+
+    // 杀死第12行：getCreditScore() >= 60 边界变异 - creditScore == 60 应该恢复ACTIVE
+    @Test
+    public void testCreditRepairService_CreditScoreExactly60_ShouldRestoreActive() throws Exception {
+        CreditRepairService crs = new CreditRepairService();
+        RegularUser user = new RegularUser("CRS_60", "CRS60");
+        user.creditScore = 55; // 起始55分
+        user.setAccountStatus(AccountStatus.FROZEN);
+        // 支付50元，加5分，变为60分
+        crs.repairCredit(user, 50.0);
+        assertEquals(60, user.getCreditScore()); // 恰好60分
+        assertEquals(AccountStatus.ACTIVE, user.getAccountStatus()); // 应该恢复ACTIVE
+    }
+
+    // 杀死第12行：getCreditScore() >= 60 边界变异 - creditScore == 59 不应该恢复ACTIVE
+    @Test
+    public void testCreditRepairService_CreditScoreBelow60_ShouldNotRestoreActive() throws Exception {
+        CreditRepairService crs = new CreditRepairService();
+        RegularUser user = new RegularUser("CRS_59", "CRS59");
+        user.creditScore = 49; // 起始49分
+        user.setAccountStatus(AccountStatus.FROZEN);
+        // 支付100元，加10分，变为59分
+        crs.repairCredit(user, 100.0);
+        assertEquals(59, user.getCreditScore()); // 59分，未达到60
+        assertEquals(AccountStatus.FROZEN, user.getAccountStatus()); // 应该仍然是FROZEN
+    }
+
+    // 杀死第12行：getCreditScore() >= 60 边界变异 - creditScore > 60 应该恢复ACTIVE
+    @Test
+    public void testCreditRepairService_CreditScoreAbove60_ShouldRestoreActive() throws Exception {
+        CreditRepairService crs = new CreditRepairService();
+        RegularUser user = new RegularUser("CRS_61", "CRS61");
+        user.creditScore = 52; // 起始52分
+        user.setAccountStatus(AccountStatus.FROZEN);
+        // 支付100元，加10分，变为62分
+        crs.repairCredit(user, 100.0);
+        assertEquals(62, user.getCreditScore()); // 62分，大于60
+        assertEquals(AccountStatus.ACTIVE, user.getAccountStatus()); // 应该恢复ACTIVE
+    }
+
+    // 综合测试：多次支付累积加分
+    @Test
+    public void testCreditRepairService_MultiplePayments_CumulativeScore() throws Exception {
+        CreditRepairService crs = new CreditRepairService();
+        RegularUser user = new RegularUser("CRS_MULTI", "CRSM");
+        user.creditScore = 30;
+        user.setAccountStatus(AccountStatus.FROZEN);
+        // 第一次支付20元，加2分 -> 32分
+        crs.repairCredit(user, 20.0);
+        assertEquals(32, user.getCreditScore());
+        assertEquals(AccountStatus.FROZEN, user.getAccountStatus()); // 仍然冻结
+        // 第二次支付140元，加14分 -> 46分
+        crs.repairCredit(user, 140.0);
+        assertEquals(46, user.getCreditScore());
+        assertEquals(AccountStatus.FROZEN, user.getAccountStatus()); // 仍然冻结
+        // 第三次支付140元，加14分 -> 60分
+        crs.repairCredit(user, 140.0);
+        assertEquals(60, user.getCreditScore());
+        assertEquals(AccountStatus.ACTIVE, user.getAccountStatus()); // 恢复激活
+    }
+
+    /** ========================== RegularUser 变异杀死专项测试 ========================== */
+    // 杀死第71行：借阅时长计算的减法和除法变异
+    @Test
+    public void testRegularUser_ReturnBook_BorrowDurationCalculation_ExactDays() throws Exception {
+        RegularUser user = new RegularUser("RU_CALC", "RUC1");
+        user.creditScore = 70;
+        Book book = new Book("CALC", "A", "CAL1", BookType.GENERAL, 2);
+        book.setAvailableCopies(0); // 模拟占用一本
+        
+        // 创建一个精确的20天前的借阅记录
+        long twentyDaysAgo = System.currentTimeMillis() - 20L * 24 * 60 * 60 * 1000;
+        Date borrowDate = new Date(twentyDaysAgo);
+        Date dueDate = new Date(twentyDaysAgo + 14L * 24 * 60 * 60 * 1000); // 14天后到期
+        
+        BorrowRecord record = new BorrowRecord(book, user, borrowDate, dueDate);
+        user.getBorrowedBooks().add(record);
+        
+        double finesBefore = user.getFines();
+        int creditBefore = user.getCreditScore();
+        
+        // 如果计算错误（减法变加法或除法变乘法），borrowDuration会完全错误
+        user.returnBook(book);
+        
+        // 验证：20天借阅，14天期限，超期6天，罚金应该是6元
+        assertEquals(finesBefore + 6.0, user.getFines(), 0.0001);
+        assertEquals(creditBefore - 5, user.getCreditScore()); // 超期扣5分
+    }
+
+    // 杀死第72行：borrowDuration > BORROW_PERIOD 边界变异 - borrowDuration == 14 不应超期
+    @Test
+    public void testRegularUser_ReturnBook_ExactlyOnTime_14Days_NoOverdue() throws Exception {
+        RegularUser user = new RegularUser("RU_14D", "RU14");
+        user.creditScore = 70;
+        Book book = new Book("ON14", "A", "O14", BookType.GENERAL, 2);
+        book.setAvailableCopies(0);
+        
+        // 创建恰好14天前的借阅记录
+        long fourteenDaysAgo = System.currentTimeMillis() - 14L * 24 * 60 * 60 * 1000;
+        Date borrowDate = new Date(fourteenDaysAgo);
+        Date dueDate = new Date(fourteenDaysAgo + 14L * 24 * 60 * 60 * 1000);
+        
+        BorrowRecord record = new BorrowRecord(book, user, borrowDate, dueDate);
+        user.getBorrowedBooks().add(record);
+        
+        int creditBefore = user.getCreditScore();
+        double finesBefore = user.getFines();
+        
+        // 捕获控制台输出
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        PrintStream old = System.out;
+        System.setOut(new PrintStream(out));
+        
+        user.returnBook(book);
+        
+        System.setOut(old);
+        String output = out.toString();
+        
+        // 恰好14天不应该打印超期信息（如果边界条件变异，会错误地打印）
+        assertFalse(output.contains("days overdue"));
+        // 应该加2分（按时归还）
+        assertEquals(creditBefore + 2, user.getCreditScore());
+        // 不应该有罚金
+        assertEquals(finesBefore, user.getFines(), 0.0001);
+    }
+
+    // 杀死第72行：borrowDuration > BORROW_PERIOD 边界变异 - borrowDuration == 15 应超期
+    @Test
+    public void testRegularUser_ReturnBook_Exactly15Days_ShouldBeOverdue() throws Exception {
+        RegularUser user = new RegularUser("RU_15D", "RU15");
+        user.creditScore = 70;
+        Book book = new Book("OV15", "A", "O15", BookType.GENERAL, 2);
+        book.setAvailableCopies(0);
+        
+        // 创建恰好15天前的借阅记录
+        long fifteenDaysAgo = System.currentTimeMillis() - 15L * 24 * 60 * 60 * 1000;
+        Date borrowDate = new Date(fifteenDaysAgo);
+        Date dueDate = new Date(fifteenDaysAgo + 14L * 24 * 60 * 60 * 1000);
+        
+        BorrowRecord record = new BorrowRecord(book, user, borrowDate, dueDate);
+        user.getBorrowedBooks().add(record);
+        
+        int creditBefore = user.getCreditScore();
+        
+        // 捕获控制台输出
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        PrintStream old = System.out;
+        System.setOut(new PrintStream(out));
+        
+        user.returnBook(book);
+        
+        System.setOut(old);
+        String output = out.toString();
+        
+        // 应该打印超期1天的信息（杀死第73行的减法变异）
+        assertTrue(output.contains("1days overdue"));
+        // 应该扣5分（超期）
+        assertEquals(creditBefore - 5, user.getCreditScore());
+        // 应该有1元罚金
+        assertTrue(user.getFines() >= 1.0);
+    }
+
+    // 杀死第73行：超期天数计算的减法变异 - 精确验证超期天数
+    @Test
+    public void testRegularUser_ReturnBook_OverdueDaysCalculation_Exact() throws Exception {
+        RegularUser user = new RegularUser("RU_OD", "RUOD");
+        user.creditScore = 70;
+        Book book = new Book("OD_CALC", "A", "ODC", BookType.GENERAL, 2);
+        book.setAvailableCopies(0);
+        
+        // 创建20天前的借阅，超期6天
+        long twentyDaysAgo = System.currentTimeMillis() - 20L * 24 * 60 * 60 * 1000;
+        Date borrowDate = new Date(twentyDaysAgo);
+        Date dueDate = new Date(twentyDaysAgo + 14L * 24 * 60 * 60 * 1000);
+        
+        BorrowRecord record = new BorrowRecord(book, user, borrowDate, dueDate);
+        user.getBorrowedBooks().add(record);
+        
+        // 捕获控制台输出
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        PrintStream old = System.out;
+        System.setOut(new PrintStream(out));
+        
+        user.returnBook(book);
+        
+        System.setOut(old);
+        String output = out.toString();
+        
+        // 应该打印"6days overdue"（如果是加法会变成34days）
+        assertTrue(output.contains("6days overdue"));
+    }
+
+    // 杀死第77行：fines > 100 边界变异 - fines == 100 不应冻结
+    @Test
+    public void testRegularUser_ReturnBook_FinesExactly100_ShouldNotFreeze() throws Exception {
+        RegularUser user = new RegularUser("RU_F100", "RUF100");
+        user.creditScore = 70;
+        user.fines = 98.0; // 起始98元
+        Book book = new Book("F100", "A", "F100", BookType.GENERAL, 2);
+        book.setAvailableCopies(0);
+        
+        // 创建16天前的借阅，超期2天，罚金2元，总计100元
+        long sixteenDaysAgo = System.currentTimeMillis() - 16L * 24 * 60 * 60 * 1000;
+        Date borrowDate = new Date(sixteenDaysAgo);
+        Date dueDate = new Date(sixteenDaysAgo + 14L * 24 * 60 * 60 * 1000);
+        
+        BorrowRecord record = new BorrowRecord(book, user, borrowDate, dueDate);
+        user.getBorrowedBooks().add(record);
+        
+        user.returnBook(book); // 不应抛异常
+        
+        // 罚金应该恰好100元
+        assertEquals(100.0, user.getFines(), 0.0001);
+        // 不应该被冻结（如果边界条件变异为 >=，会错误地冻结）
+        assertNotEquals(AccountStatus.FROZEN, user.getAccountStatus());
+    }
+
+    // 杀死第77行：fines > 100 边界变异 - fines == 101 应冻结并抛异常
+    @Test
+    public void testRegularUser_ReturnBook_Fines101_ShouldFreezeAndThrow() throws Exception {
+        RegularUser user = new RegularUser("RU_F101", "RUF101");
+        user.creditScore = 70;
+        user.fines = 98.0; // 起始98元
+        Book book = new Book("F101", "A", "F101", BookType.GENERAL, 2);
+        book.setAvailableCopies(0);
+        
+        // 创建17天前的借阅，超期3天，罚金3元，总计101元
+        long seventeenDaysAgo = System.currentTimeMillis() - 17L * 24 * 60 * 60 * 1000;
+        Date borrowDate = new Date(seventeenDaysAgo);
+        Date dueDate = new Date(seventeenDaysAgo + 14L * 24 * 60 * 60 * 1000);
+        
+        BorrowRecord record = new BorrowRecord(book, user, borrowDate, dueDate);
+        user.getBorrowedBooks().add(record);
+        
+        try {
+            user.returnBook(book);
+            fail("罚金超过100应抛OverdueFineException");
+        } catch (OverdueFineException e) {
+            assertEquals("The fine is too high and the account has been frozen.", e.getMessage());
+            assertEquals(AccountStatus.FROZEN, user.getAccountStatus());
+            assertTrue(user.getFines() > 100.0);
+        }
+    }
+
+    // 杀死第84行：creditScore < 50 边界变异 - creditScore == 50 不应冻结
+    @Test
+    public void testRegularUser_ReturnBook_CreditScoreExactly50_ShouldNotFreeze() throws Exception {
+        RegularUser user = new RegularUser("RU_CS50", "RUCS50");
+        user.creditScore = 55; // 起始55分
+        user.fines = 0.0;
+        Book book = new Book("CS50", "A", "CS50", BookType.GENERAL, 2);
+        book.setAvailableCopies(0);
+        
+        // 创建17天前的借阅，超期3天，会扣5分，变为50分
+        long seventeenDaysAgo = System.currentTimeMillis() - 17L * 24 * 60 * 60 * 1000;
+        Date borrowDate = new Date(seventeenDaysAgo);
+        Date dueDate = new Date(seventeenDaysAgo + 14L * 24 * 60 * 60 * 1000);
+        
+        BorrowRecord record = new BorrowRecord(book, user, borrowDate, dueDate);
+        user.getBorrowedBooks().add(record);
+        
+        user.returnBook(book);
+        
+        // 信用分应该恰好50分
+        assertEquals(50, user.getCreditScore());
+        // 不应该被冻结（如果边界条件变异为 <=，会错误地冻结）
+        assertNotEquals(AccountStatus.FROZEN, user.getAccountStatus());
+    }
+
+    // 杀死第84行：creditScore < 50 边界变异 - creditScore == 49 应冻结
+    @Test
+    public void testRegularUser_ReturnBook_CreditScoreBelow50_ShouldFreeze() throws Exception {
+        RegularUser user = new RegularUser("RU_CS49", "RUCS49");
+        user.creditScore = 54; // 起始54分
+        user.fines = 0.0;
+        Book book = new Book("CS49", "A", "CS49", BookType.GENERAL, 2);
+        book.setAvailableCopies(0);
+        
+        // 创建17天前的借阅，超期3天，会扣5分，变为49分
+        long seventeenDaysAgo = System.currentTimeMillis() - 17L * 24 * 60 * 60 * 1000;
+        Date borrowDate = new Date(seventeenDaysAgo);
+        Date dueDate = new Date(seventeenDaysAgo + 14L * 24 * 60 * 60 * 1000);
+        
+        BorrowRecord record = new BorrowRecord(book, user, borrowDate, dueDate);
+        user.getBorrowedBooks().add(record);
+        
+        user.returnBook(book);
+        
+        // 信用分应该变为49分
+        assertEquals(49, user.getCreditScore());
+        // 应该被冻结
+        assertEquals(AccountStatus.FROZEN, user.getAccountStatus());
+    }
+
+    // 综合测试：验证借阅时长计算公式的完整性
+    @Test
+    public void testRegularUser_ReturnBook_BorrowDurationFormula_MultipleScenarios() throws Exception {
+        RegularUser user = new RegularUser("RU_FORM", "RUFORM");
+        user.creditScore = 100;
+        
+        // 场景1：恰好7天借阅（未超期）
+        Book book1 = new Book("B7", "A", "B7", BookType.GENERAL, 3);
+        book1.setAvailableCopies(0);
+        long sevenDaysAgo = System.currentTimeMillis() - 7L * 24 * 60 * 60 * 1000;
+        BorrowRecord rec1 = new BorrowRecord(book1, user, new Date(sevenDaysAgo), 
+                                            new Date(sevenDaysAgo + 14L * 24 * 60 * 60 * 1000));
+        user.getBorrowedBooks().add(rec1);
+        double fines1 = user.getFines();
+        user.returnBook(book1);
+        // 7天未超期，无罚金
+        assertEquals(fines1, user.getFines(), 0.0001);
+        
+        // 场景2：25天借阅（超期11天）
+        Book book2 = new Book("B25", "A", "B25", BookType.GENERAL, 3);
+        book2.setAvailableCopies(0);
+        long twentyFiveDaysAgo = System.currentTimeMillis() - 25L * 24 * 60 * 60 * 1000;
+        BorrowRecord rec2 = new BorrowRecord(book2, user, new Date(twentyFiveDaysAgo),
+                                            new Date(twentyFiveDaysAgo + 14L * 24 * 60 * 60 * 1000));
+        user.getBorrowedBooks().add(rec2);
+        double fines2 = user.getFines();
+        user.returnBook(book2);
+        // 超期11天，罚金11元
+        assertEquals(fines2 + 11.0, user.getFines(), 0.0001);
+    }
+
+    /** ========================== Reservation 变异杀死专项测试 ========================== */
+    // 杀死第27行：VIP用户预约时的打印语句被移除变异
+    @Test
+    public void testReservation_VIPUser_ShouldPrintPriorityEnhanced() {
+        VIPUser vip = new VIPUser("VIP_PRINT", "VIPPR");
+        Book book = new Book("RSV_VIP", "A", "RSVVIP", BookType.GENERAL, 1);
+        
+        // 捕获控制台输出
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        PrintStream old = System.out;
+        System.setOut(new PrintStream(out));
+        
+        Reservation reservation = new Reservation(book, vip);
+        
+        System.setOut(old);
+        String output = out.toString();
+        
+        // 验证VIP用户的打印信息（杀死移除println的变异）
+        assertTrue(output.contains("For VIP users' reservations, the priority is enhanced."));
+        // 验证优先级确实加了10分
+        assertTrue(reservation.getPriority() >= 110); // 默认100 + 10
+    }
+
+    // 杀死第34行：延迟归还降低优先级时的打印语句被移除变异
+    @Test
+    public void testReservation_DelayedReturn_ShouldPrintPriorityLowered() {
+        RegularUser user = new RegularUser("DELAY_PRINT", "DELPR");
+        Book book = new Book("RSV_DELAY", "A", "RSVDEL", BookType.GENERAL, 1);
+        
+        // 构造一条逾期归还记录
+        Book borrowedBook = new Book("BORROWED", "A", "BRW", BookType.GENERAL, 1);
+        Date now = new Date();
+        Date duePast = new Date(System.currentTimeMillis() - 2 * 24 * 60 * 60 * 1000); // 2天前到期
+        BorrowRecord overdueRecord = new BorrowRecord(borrowedBook, user, 
+            new Date(System.currentTimeMillis() - 10 * 24 * 60 * 60 * 1000), duePast);
+        overdueRecord.setReturnDate(now); // 归还时间晚于到期时间
+        user.getBorrowedBooks().add(overdueRecord);
+        
+        // 捕获控制台输出
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        PrintStream old = System.out;
+        System.setOut(new PrintStream(out));
+        
+        Reservation reservation = new Reservation(book, user);
+        
+        System.setOut(old);
+        String output = out.toString();
+        
+        // 验证延迟归还的打印信息（杀死移除println的变异）
+        assertTrue(output.contains("Delayed return records will lower the reservation priority."));
+        // 验证优先级确实减了5分
+        assertTrue(reservation.getPriority() <= 95); // 默认100 - 5
+    }
+
+    // 杀死第40行：黑名单用户不能预约时的打印语句被移除变异
+    @Test
+    public void testReservation_BlacklistedUser_ShouldPrintCannotReserve() {
+        RegularUser user = new RegularUser("BL_PRINT", "BLPR");
+        user.setAccountStatus(AccountStatus.BLACKLISTED);
+        Book book = new Book("RSV_BL", "A", "RSVBL", BookType.GENERAL, 1);
+        
+        // 捕获控制台输出
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        PrintStream old = System.out;
+        System.setOut(new PrintStream(out));
+        
+        Reservation reservation = new Reservation(book, user);
+        
+        System.setOut(old);
+        String output = out.toString();
+        
+        // 验证黑名单用户的打印信息（杀死移除println的变异）
+        assertTrue(output.contains("Blacklisted users cannot reserve books."));
+        // 验证优先级为-1
+        assertEquals(-1, reservation.getPriority());
+    }
+
+    // 综合测试：VIP用户有延迟记录的优先级计算
+    @Test
+    public void testReservation_VIPWithDelayedReturn_PriorityCalculation() {
+        VIPUser vip = new VIPUser("VIP_DELAY", "VIPDEL");
+        Book book = new Book("RSV_VIPD", "A", "RSVVD", BookType.GENERAL, 1);
+        
+        // 构造两条逾期归还记录
+        Date now = new Date();
+        Date duePast = new Date(System.currentTimeMillis() - 3 * 24 * 60 * 60 * 1000);
+        
+        BorrowRecord record1 = new BorrowRecord(new Book("B1", "A", "B1", BookType.GENERAL, 1), vip,
+            new Date(System.currentTimeMillis() - 20 * 24 * 60 * 60 * 1000), duePast);
+        record1.setReturnDate(now);
+        
+        BorrowRecord record2 = new BorrowRecord(new Book("B2", "A", "B2", BookType.GENERAL, 1), vip,
+            new Date(System.currentTimeMillis() - 25 * 24 * 60 * 60 * 1000), duePast);
+        record2.setReturnDate(now);
+        
+        vip.getBorrowedBooks().add(record1);
+        vip.getBorrowedBooks().add(record2);
+        
+        // 捕获控制台输出
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        PrintStream old = System.out;
+        System.setOut(new PrintStream(out));
+        
+        Reservation reservation = new Reservation(book, vip);
+        
+        System.setOut(old);
+        String output = out.toString();
+        
+        // 应该同时打印VIP增强和延迟降低的信息
+        assertTrue(output.contains("For VIP users' reservations, the priority is enhanced."));
+        assertTrue(output.contains("Delayed return records will lower the reservation priority."));
+        
+        // 优先级计算：100(基础) + 10(VIP) - 5(第一次延迟) - 5(第二次延迟) = 100
+        assertEquals(100, reservation.getPriority());
+    }
+
+    // 测试普通用户无延迟记录的正常优先级
+    @Test
+    public void testReservation_RegularUserNoDelay_NormalPriority() {
+        RegularUser user = new RegularUser("REG_NORM", "REGNORM");
+        user.creditScore = 85;
+        Book book = new Book("RSV_NORM", "A", "RSVNORM", BookType.GENERAL, 1);
+        
+        // 捕获控制台输出
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        PrintStream old = System.out;
+        System.setOut(new PrintStream(out));
+        
+        Reservation reservation = new Reservation(book, user);
+        
+        System.setOut(old);
+        String output = out.toString();
+        
+        // 不应该有任何特殊打印
+        assertFalse(output.contains("For VIP users' reservations, the priority is enhanced."));
+        assertFalse(output.contains("Delayed return records will lower the reservation priority."));
+        assertFalse(output.contains("Blacklisted users cannot reserve books."));
+        
+        // 优先级应该等于信用分
+        assertEquals(85, reservation.getPriority());
+    }
+
+    // 测试多条延迟记录累积降低优先级
+    @Test
+    public void testReservation_MultipleDelayedReturns_CumulativePenalty() {
+        RegularUser user = new RegularUser("MULTI_DELAY", "MULTDEL");
+        user.creditScore = 100;
+        Book book = new Book("RSV_MULTI", "A", "RSVMULTI", BookType.GENERAL, 1);
+        
+        // 构造3条逾期记录
+        Date now = new Date();
+        Date duePast = new Date(System.currentTimeMillis() - 1 * 24 * 60 * 60 * 1000);
+        
+        for (int i = 0; i < 3; i++) {
+            Book b = new Book("BK" + i, "A", "BK" + i, BookType.GENERAL, 1);
+            BorrowRecord rec = new BorrowRecord(b, user,
+                new Date(System.currentTimeMillis() - 15 * 24 * 60 * 60 * 1000), duePast);
+            rec.setReturnDate(now);
+            user.getBorrowedBooks().add(rec);
+        }
+        
+        Reservation reservation = new Reservation(book, user);
+        
+        // 优先级：100 - 5*3 = 85
+        assertEquals(85, reservation.getPriority());
+    }
+
+    // 测试getBook方法
+    @Test
+    public void testReservation_GetBook_ReturnsCorrectBook() {
+        RegularUser user = new RegularUser("GET_BOOK", "GETBK");
+        Book book = new Book("TEST_BOOK", "A", "TESTBK", BookType.GENERAL, 1);
+        
+        Reservation reservation = new Reservation(book, user);
+        
+        assertNotNull(reservation.getBook());
+        assertEquals(book, reservation.getBook());
+        assertEquals("TEST_BOOK", reservation.getBook().getTitle());
+    }
+
+    // 测试getUser方法
+    @Test
+    public void testReservation_GetUser_ReturnsCorrectUser() {
+        RegularUser user = new RegularUser("GET_USER", "GETUSR");
+        Book book = new Book("TEST_BOOK2", "A", "TESTBK2", BookType.GENERAL, 1);
+        
+        Reservation reservation = new Reservation(book, user);
+        
+        assertNotNull(reservation.getUser());
+        assertEquals(user, reservation.getUser());
+        // 验证是同一个用户对象
+        assertTrue(reservation.getUser() instanceof RegularUser);
+    }
+
+    /** ========================== BorrowRecord 变异杀死专项测试 ========================== */
+    // 杀死第50行：黑名单用户罚金翻倍时的打印语句被移除变异
+    @Test
+    public void testBorrowRecord_BlacklistedUser_ShouldPrintFineDoubled() {
+        RegularUser user = new RegularUser("BL_FINE", "BLFINE");
+        user.setAccountStatus(AccountStatus.BLACKLISTED);
+        Book book = new Book("BL_BOOK", "A", "BLBK", BookType.GENERAL, 1);
+        
+        // 创建逾期2天的借阅记录
+        Date borrowDate = new Date(System.currentTimeMillis() - 10 * 24 * 60 * 60 * 1000L);
+        Date dueDate = new Date(System.currentTimeMillis() - 2 * 24 * 60 * 60 * 1000L);
+        BorrowRecord record = new BorrowRecord(book, user, borrowDate, dueDate);
+        
+        // 捕获控制台输出
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        PrintStream old = System.out;
+        System.setOut(new PrintStream(out));
+        
+        record.setReturnDate(new Date()); // 现在归还，已逾期
+        
+        System.setOut(old);
+        String output = out.toString();
+        
+        // 验证黑名单用户的打印信息（杀死移除println的变异）
+        assertTrue(output.contains("The user has been blacklisted and the fine is doubled."));
+        // 验证罚金确实翻倍：普通书2天*1元=2元，黑名单*2=4元
+        assertEquals(4.0, record.getFineAmount(), 0.0001);
+    }
+
+    // 杀死第57行：图书损坏额外罚金时的打印语句被移除变异
+    @Test
+    public void testBorrowRecord_DamagedBook_ShouldPrintAdditionalFine() {
+        RegularUser user = new RegularUser("DAM_USER", "DAMUSER");
+        Book book = new Book("DAM_BOOK", "A", "DAMBK", BookType.GENERAL, 1);
+        book.setDamaged(true); // 设置图书为损坏状态
+        
+        // 创建逾期1天的借阅记录
+        Date borrowDate = new Date(System.currentTimeMillis() - 5 * 24 * 60 * 60 * 1000L);
+        Date dueDate = new Date(System.currentTimeMillis() - 1 * 24 * 60 * 60 * 1000L);
+        BorrowRecord record = new BorrowRecord(book, user, borrowDate, dueDate);
+        
+        // 捕获控制台输出
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        PrintStream old = System.out;
+        System.setOut(new PrintStream(out));
+        
+        record.setReturnDate(new Date()); // 现在归还
+        
+        System.setOut(old);
+        String output = out.toString();
+        
+        // 验证图书损坏的打印信息（杀死移除println的变异）
+        assertTrue(output.contains("The book is damaged. An additional fine of 50 yuan is imposed."));
+        // 验证罚金：1天*(1元+50元)=51元
+        assertEquals(51.0, record.getFineAmount(), 0.0001);
+    }
+
+    // 杀死第88行：延长借阅期限时的打印语句被移除变异
+    @Test
+    public void testBorrowRecord_ExtendDueDate_ShouldPrintNewDueDate() {
+        RegularUser user = new RegularUser("EXT_USER", "EXTUSER");
+        Book book = new Book("EXT_BOOK", "A", "EXTBK", BookType.GENERAL, 1);
+        
+        Date borrowDate = new Date();
+        Date dueDate = new Date(System.currentTimeMillis() + 14 * 24 * 60 * 60 * 1000L);
+        BorrowRecord record = new BorrowRecord(book, user, borrowDate, dueDate);
+        
+        Date oldDueDate = record.getDueDate();
+        
+        // 捕获控制台输出
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        PrintStream old = System.out;
+        System.setOut(new PrintStream(out));
+        
+        record.extendDueDate(7); // 延长7天
+        
+        System.setOut(old);
+        String output = out.toString();
+        
+        // 验证延长期限的打印信息（杀死移除println的变异）
+        assertTrue(output.contains("The borrowing period has been extended to:"));
+        // 验证到期日确实延长了
+        assertTrue(record.getDueDate().after(oldDueDate));
+    }
+
+    // 综合测试：黑名单用户借损坏的珍本图书
+    @Test
+    public void testBorrowRecord_BlacklistedUserWithDamagedRareBook_MaximumFine() {
+        RegularUser user = new RegularUser("BL_RARE", "BLRARE");
+        user.setAccountStatus(AccountStatus.BLACKLISTED);
+        Book rareBook = new Book("RARE_DAM", "A", "RAREDAM", BookType.RARE, 1);
+        rareBook.setDamaged(true);
+        
+        // 创建逾期3天的借阅记录
+        Date borrowDate = new Date(System.currentTimeMillis() - 20 * 24 * 60 * 60 * 1000L);
+        Date dueDate = new Date(System.currentTimeMillis() - 3 * 24 * 60 * 60 * 1000L);
+        BorrowRecord record = new BorrowRecord(rareBook, user, borrowDate, dueDate);
+        
+        // 捕获控制台输出
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        PrintStream old = System.out;
+        System.setOut(new PrintStream(out));
+        
+        record.setReturnDate(new Date());
+        
+        System.setOut(old);
+        String output = out.toString();
+        
+        // 应该同时打印黑名单和图书损坏的信息
+        assertTrue(output.contains("The user has been blacklisted and the fine is doubled."));
+        assertTrue(output.contains("The book is damaged. An additional fine of 50 yuan is imposed."));
+        
+        // 罚金计算：baseFine=5(珍本)*2(黑名单)=10，然后+50(损坏)=60，最终3天*60=180元
+        assertEquals(180.0, record.getFineAmount(), 0.0001);
+    }
+
+    // 测试期刊图书的罚金计算
+    @Test
+    public void testBorrowRecord_JournalBook_CorrectBaseFine() {
+        RegularUser user = new RegularUser("JOU_USER", "JOUUSER");
+        Book journal = new Book("JOURNAL", "A", "JOU", BookType.JOURNAL, 1);
+        
+        // 创建逾期5天的借阅记录
+        Date borrowDate = new Date(System.currentTimeMillis() - 20 * 24 * 60 * 60 * 1000L);
+        Date dueDate = new Date(System.currentTimeMillis() - 5 * 24 * 60 * 60 * 1000L);
+        BorrowRecord record = new BorrowRecord(journal, user, borrowDate, dueDate);
+        
+        record.setReturnDate(new Date());
+        
+        // 期刊罚金：5天 * 2元/天 = 10元
+        assertEquals(10.0, record.getFineAmount(), 0.0001);
+    }
+
+    // 测试未归还或按时归还的情况
+    @Test
+    public void testBorrowRecord_NoReturnOrOnTime_NoFine() {
+        RegularUser user = new RegularUser("NO_FINE", "NOFINE");
+        Book book = new Book("NO_FINE_BK", "A", "NFBK", BookType.GENERAL, 1);
+        
+        // 场景1：未归还
+        Date borrowDate = new Date(System.currentTimeMillis() - 5 * 24 * 60 * 60 * 1000L);
+        Date dueDate = new Date(System.currentTimeMillis() + 9 * 24 * 60 * 60 * 1000L);
+        BorrowRecord record1 = new BorrowRecord(book, user, borrowDate, dueDate);
+        
+        // calculateFine应该返回0（returnDate为null）
+        assertEquals(0.0, record1.calculateFine(), 0.0001);
+        
+        // 场景2：按时归还（归还日期早于到期日）
+        BorrowRecord record2 = new BorrowRecord(book, user, borrowDate, dueDate);
+        Date onTimeReturn = new Date(System.currentTimeMillis() + 5 * 24 * 60 * 60 * 1000L); // 提前归还
+        record2.setReturnDate(onTimeReturn);
+        
+        assertEquals(0.0, record2.getFineAmount(), 0.0001);
+    }
+
+    // 测试各个getter方法
+    @Test
+    public void testBorrowRecord_Getters_ReturnCorrectValues() {
+        RegularUser user = new RegularUser("GET_TEST", "GETTEST");
+        Book book = new Book("GET_BOOK", "A", "GETBK", BookType.GENERAL, 1);
+        Date borrowDate = new Date(System.currentTimeMillis() - 10 * 24 * 60 * 60 * 1000L);
+        Date dueDate = new Date(System.currentTimeMillis() + 4 * 24 * 60 * 60 * 1000L);
+        
+        BorrowRecord record = new BorrowRecord(book, user, borrowDate, dueDate);
+        
+        // 测试所有getter方法
+        assertNotNull(record.getBook());
+        assertEquals(book, record.getBook());
+        assertEquals(borrowDate, record.getBorrowDate());
+        assertEquals(dueDate, record.getDueDate());
+        assertNull(record.getReturnDate()); // 初始时returnDate为null
+        assertEquals(0.0, record.getFineAmount(), 0.0001); // 初始时fineAmount为0
+        
+        // 设置归还日期后
+        Date returnDate = new Date();
+        record.setReturnDate(returnDate);
+        assertNotNull(record.getReturnDate());
+        assertEquals(returnDate, record.getReturnDate());
+    }
+
+    // 测试extendDueDate方法的精确延长
+    @Test
+    public void testBorrowRecord_ExtendDueDate_ExactDays() {
+        RegularUser user = new RegularUser("EXT_EXACT", "EXTEXACT");
+        Book book = new Book("EXT_EXACT_BK", "A", "EXTEBK", BookType.GENERAL, 1);
+        
+        // 设置一个固定的到期日
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.set(2025, java.util.Calendar.JANUARY, 15, 0, 0, 0);
+        cal.set(java.util.Calendar.MILLISECOND, 0);
+        Date dueDate = cal.getTime();
+        
+        Date borrowDate = new Date(dueDate.getTime() - 14 * 24 * 60 * 60 * 1000L);
+        BorrowRecord record = new BorrowRecord(book, user, borrowDate, dueDate);
+        
+        // 延长14天
+        record.extendDueDate(14);
+        
+        // 计算期望的新到期日
+        cal.setTime(dueDate);
+        cal.add(java.util.Calendar.DAY_OF_MONTH, 14);
+        Date expectedDueDate = cal.getTime();
+        
+        assertEquals(expectedDueDate, record.getDueDate());
+    }
+
+    /** ========================== AutoRenewalService 变异杀死专项测试 ========================== */
+    // 杀死第16行：creditScore < 60 边界变异 - creditScore == 60 应该允许续借
+    @Test
+    public void testAutoRenewalService_CreditScoreExactly60_ShouldAllow() throws Exception {
+        AutoRenewalService ars = new AutoRenewalService();
+        RegularUser user = new RegularUser("ARS_60", "ARS60");
+        user.creditScore = 70; // 先设置高分以便借书
+        Book book = new Book("ARS_BOOK", "A", "ARSBK", BookType.GENERAL, 1);
+        
+        // 先借书创建借阅记录（借书会+1分）
+        user.borrowBook(book);
+        
+        // 将信用分设置为恰好60（边界值）
+        user.creditScore = 60;
+        
+        Date dueDateBefore = user.findBorrowRecord(book).getDueDate();
+        
+        // 续借应该成功（如果边界条件变异为 <=，会错误地抛异常）
+        ars.autoRenew(user, book);
+        
+        // 验证到期日确实延长了
+        Date dueDateAfter = user.findBorrowRecord(book).getDueDate();
+        assertTrue(dueDateAfter.after(dueDateBefore));
+    }
+
+    // 测试信用分低于60时应抛异常
+    @Test
+    public void testAutoRenewalService_CreditScoreBelow60_ShouldThrow() throws Exception {
+        AutoRenewalService ars = new AutoRenewalService();
+        RegularUser user = new RegularUser("ARS_59", "ARS59");
+        user.creditScore = 70; // 先设置高分以便借书
+        Book book = new Book("ARS_LOW", "A", "ARSLOW", BookType.GENERAL, 1);
+        
+        // 借书
+        user.borrowBook(book);
+        
+        // 将信用分降到59
+        user.creditScore = 59;
+        
+        try {
+            ars.autoRenew(user, book);
+            fail("信用分<60应抛InsufficientCreditException");
+        } catch (InsufficientCreditException e) {
+            assertEquals("The credit score is too low to renew the loan.", e.getMessage());
+        }
+    }
+
+    // 测试账户非ACTIVE状态时应抛异常
+    @Test
+    public void testAutoRenewalService_AccountNotActive_ShouldThrow() throws Exception {
+        AutoRenewalService ars = new AutoRenewalService();
+        RegularUser user = new RegularUser("ARS_FRZ", "ARSFRZ");
+        user.creditScore = 70;
+        Book book = new Book("ARS_FRZ_BK", "A", "ARSFBK", BookType.GENERAL, 1);
+        
+        // 借书
+        user.borrowBook(book);
+        
+        // 冻结账户
+        user.setAccountStatus(AccountStatus.FROZEN);
+        
+        try {
+            ars.autoRenew(user, book);
+            fail("账户冻结时应抛AccountFrozenException");
+        } catch (AccountFrozenException e) {
+            assertEquals("The account is frozen and cannot be automatically renewed.", e.getMessage());
+        }
+    }
+
+    // 测试图书被预约时应抛异常
+    @Test
+    public void testAutoRenewalService_BookReserved_ShouldThrow() throws Exception {
+        AutoRenewalService ars = new AutoRenewalService();
+        RegularUser user = new RegularUser("ARS_RES", "ARSRES");
+        user.creditScore = 70;
+        Book book = new Book("ARS_RES_BK", "A", "ARSRBK", BookType.GENERAL, 1);
+        
+        // 借书
+        user.borrowBook(book);
+        
+        // 添加预约
+        RegularUser otherUser = new RegularUser("OTHER", "OTHER");
+        book.addReservation(new Reservation(book, otherUser));
+        
+        try {
+            ars.autoRenew(user, book);
+            fail("图书被预约时应抛InvalidOperationException");
+        } catch (InvalidOperationException e) {
+            assertEquals("The book has been reserved by other users and cannot be renewed.", e.getMessage());
+        }
+    }
+
+    // 测试未借阅该书时应抛异常
+    @Test
+    public void testAutoRenewalService_NoRecord_ShouldThrow() throws Exception {
+        AutoRenewalService ars = new AutoRenewalService();
+        RegularUser user = new RegularUser("ARS_NOREC", "ARSNOREC");
+        user.creditScore = 70;
+        Book book = new Book("ARS_NR_BK", "A", "ARSNRBK", BookType.GENERAL, 1);
+        
+        // 没有借阅该书
+        try {
+            ars.autoRenew(user, book);
+            fail("未借阅该书时应抛InvalidOperationException");
+        } catch (InvalidOperationException e) {
+            assertEquals("The borrowing record of this book is not found.", e.getMessage());
+        }
+    }
+
+    // 测试正常续借成功的情况
+    @Test
+    public void testAutoRenewalService_Success_ExtendBy14Days() throws Exception {
+        AutoRenewalService ars = new AutoRenewalService();
+        RegularUser user = new RegularUser("ARS_SUCC", "ARSSUCC");
+        user.creditScore = 80;
+        Book book = new Book("ARS_SUC_BK", "A", "ARSSBK", BookType.GENERAL, 1);
+        
+        // 借书
+        user.borrowBook(book);
+        
+        BorrowRecord record = user.findBorrowRecord(book);
+        Date oldDueDate = record.getDueDate();
+        
+        // 续借
+        ars.autoRenew(user, book);
+        
+        // 验证到期日延长了14天
+        Date newDueDate = record.getDueDate();
+        long diff = (newDueDate.getTime() - oldDueDate.getTime()) / (1000 * 60 * 60 * 24);
+        assertEquals(14, diff);
+    }
+
+    // 综合测试：多个条件边界情况
+    @Test
+    public void testAutoRenewalService_BoundaryConditions_Comprehensive() throws Exception {
+        AutoRenewalService ars = new AutoRenewalService();
+        
+        // 场景1：信用分恰好60，账户ACTIVE，无预约 -> 应该成功
+        RegularUser user1 = new RegularUser("COMP_1", "COMP1");
+        user1.creditScore = 60;
+        Book book1 = new Book("COMP_BK1", "A", "CMPBK1", BookType.GENERAL, 1);
+        user1.borrowBook(book1);
+        Date before1 = user1.findBorrowRecord(book1).getDueDate();
+        ars.autoRenew(user1, book1);
+        assertTrue(user1.findBorrowRecord(book1).getDueDate().after(before1));
+        
+        // 场景2：预约队列size恰好为0 -> 应该成功
+        RegularUser user2 = new RegularUser("COMP_2", "COMP2");
+        user2.creditScore = 70;
+        Book book2 = new Book("COMP_BK2", "A", "CMPBK2", BookType.GENERAL, 1);
+        user2.borrowBook(book2);
+        assertEquals(0, book2.getReservationQueue().size());
+        Date before2 = user2.findBorrowRecord(book2).getDueDate();
+        ars.autoRenew(user2, book2);
+        assertTrue(user2.findBorrowRecord(book2).getDueDate().after(before2));
+    }
+
+    /** ========================== InventoryService 变异杀死专项测试 ========================== */
+    // 杀死第26行：book.setInRepair(true) 调用被移除变异
+    @Test
+    public void testInventoryService_ReportDamaged_ShouldSetBookInRepair() throws Exception {
+        InventoryService inv = new InventoryService();
+        Book book = new Book("DamBk", "A", "DAMBK", BookType.GENERAL, 2);
+        
+        // 创建一个假用户，让其借阅记录包含该书
+        final double[] paidFine = new double[]{-1};
+        java.util.List<BorrowRecord> fakeList = new java.util.AbstractList<BorrowRecord>(){
+            @Override public BorrowRecord get(int index){ return null; }
+            @Override public int size(){ return 0; }
+            @Override public boolean contains(Object o){ return o == book; }
+        };
+        User fakeUser = new User("FakeDam", "FDAM", UserType.REGULAR) {
+            @Override public void borrowBook(Book b) {}
+            @Override public void returnBook(Book b) {}
+            @Override public java.util.List<BorrowRecord> getBorrowedBooks(){ return fakeList; }
+            @Override public void payFine(double amount){ paidFine[0] = amount; }
+        };
+        
+        // 捕获控制台输出以验证setInRepair被调用
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        PrintStream old = System.out;
+        
+        // 报告损坏前，书籍可用
+        assertTrue(book.isAvailable());
+        
+        // 报告损坏
+        inv.reportDamaged(book, fakeUser);
+        
+        // 验证书籍被设置为维修状态（通过isAvailable检查）
+        // 如果setInRepair(true)被调用，isAvailable()会返回false并打印维修信息
+        System.setOut(new PrintStream(out));
+        boolean available = book.isAvailable();
+        System.setOut(old);
+        
+        assertFalse("书籍应该在维修中，不可用", available);
+        String output = out.toString();
+        assertTrue("应该打印维修信息", output.contains("under repair"));
+        
+        // 验证支付了30元维修费
+        assertEquals(30.0, paidFine[0], 0.0001);
+    }
+
+    /** ========================== User 变异杀死专项测试 ========================== */
+    // 杀死第120行：creditScore < 0 边界变异 - creditScore == 0 不应再被设置为0
+    @Test
+    public void testUser_DeductScore_AlreadyZero_ShouldNotChange() {
+        RegularUser user = new RegularUser("ZERO_CS", "ZEROCS");
+        user.creditScore = 5;
+        
+        // 扣除5分，变为0
+        user.deductScore(5);
+        assertEquals(0, user.getCreditScore());
+        
+        // 再扣除10分，creditScore已经是0，不应该变成负数，仍然是0
+        // 如果边界条件变异为 <=，会错误地再次执行 creditScore = 0
+        user.deductScore(10);
+        assertEquals(0, user.getCreditScore());
+    }
+
+    /** ========================== VIPUser 变异杀死专项测试 ========================== */
+    // 杀死第47行：VIP借书成功时的println被移除变异
+    @Test
+    public void testVIPUser_BorrowBook_Success_ShouldPrintSuccessMessage() throws Exception {
+        VIPUser vip = new VIPUser("VIP_PRINT_SUC", "VIPSUC");
+        vip.creditScore = 70;
+        Book book = new Book("VIP_SUC_BK", "A", "VIPSBK", BookType.GENERAL, 1);
+        
+        // 捕获控制台输出
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        PrintStream old = System.out;
+        System.setOut(new PrintStream(out));
+        
+        vip.borrowBook(book);
+        
+        System.setOut(old);
+        String output = out.toString();
+        
+        // 验证成功借书的打印信息（杀死移除println的变异）
+        assertTrue(output.contains("VIP_PRINT_SUC Successfully borrowed VIP_SUC_BK"));
+        assertTrue(output.contains("Due date:"));
+    }
+
+    /** ========================== Library 变异杀死专项测试 ========================== */
+    // 杀死reportLostBook异常处理中的println被移除变异
+    @Test
+    public void testLibrary_ReportLostBook_ExceptionHandling_ShouldPrintError() {
+        Library lib = new Library();
+        RegularUser user = new RegularUser("ERR_LOST", "ERRLOST");
+        Book book = new Book("ERR_BK", "A", "ERRBK", BookType.GENERAL, 1);
+        
+        // 用户没有借这本书，会抛异常
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        PrintStream old = System.out;
+        System.setOut(new PrintStream(out));
+        
+        lib.reportLostBook(user, book);
+        
+        System.setOut(old);
+        String output = out.toString();
+        
+        // 验证异常处理的打印信息（杀死移除println的变异）
+        assertTrue(output.contains("Reporting loss failed"));
+    }
+
+    // 杀死reportDamagedBook异常处理中的println被移除变异
+    @Test
+    public void testLibrary_ReportDamagedBook_ExceptionHandling_ShouldPrintError() {
+        Library lib = new Library();
+        RegularUser user = new RegularUser("ERR_DAM", "ERRDAM");
+        Book book = new Book("ERR_DAM_BK", "A", "ERRDAMBK", BookType.GENERAL, 1);
+        
+        // 用户没有借这本书，会抛异常
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        PrintStream old = System.out;
+        System.setOut(new PrintStream(out));
+        
+        lib.reportDamagedBook(user, book);
+        
+        System.setOut(old);
+        String output = out.toString();
+        
+        // 验证异常处理的打印信息（杀死移除println的变异）
+        assertTrue(output.contains("Reporting damage failed"));
+    }
+
+    /** ========================== ExternalLibraryAPI 变异杀死尝试 ========================== */
+    // 尝试通过验证返回值的使用来杀死随机返回值变异
+    @Test
+    public void testExternalLibraryAPI_CheckAvailability_ReturnValueUsed() {
+        // 多次调用，确保返回值被真正使用和检查
+        int trueCount = 0;
+        int falseCount = 0;
+        
+        for (int i = 0; i < 1000; i++) {
+            boolean result = ExternalLibraryAPI.checkAvailability("TestBook" + i);
+            if (result) {
+                trueCount++;
+            } else {
+                falseCount++;
+            }
+        }
+        
+        // 验证确实有true和false两种返回值（统计意义上）
+        // 1000次调用，理论上true和false都应该出现
+        assertTrue("应该有true返回", trueCount > 0);
+        assertTrue("应该有false返回", falseCount > 0);
+        // 验证总数正确
+        assertEquals(1000, trueCount + falseCount);
+        
+        // 验证返回值在合理范围内（统计学上接近50%，但允许波动）
+        // 至少应该在20%-80%范围内
+        assertTrue("true的比例应该在合理范围", trueCount > 200 && trueCount < 800);
+    }
 }

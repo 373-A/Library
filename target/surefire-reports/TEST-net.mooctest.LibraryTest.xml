@@ -1,528 +1,252 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="net.mooctest.LibraryTest" time="0.174" tests="140" errors="0" skipped="0" failures="0">
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite tests="185" failures="0" name="net.mooctest.LibraryTest" time="0.266" errors="0" skipped="0">
   <properties>
-    <property name="sun.desktop" value="windows"/>
-    <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
-    <property name="file.encoding.pkg" value="sun.io"/>
-    <property name="java.specification.version" value="1.8"/>
-    <property name="sun.cpu.isalist" value="amd64"/>
-    <property name="sun.jnu.encoding" value="GBK"/>
-    <property name="java.class.path" value="C:\Users\mroga\Downloads\Library_1\target\test-classes;C:\Users\mroga\Downloads\Library_1\target\classes;C:\Users\mroga\.m2\repository\junit\junit\4.12\junit-4.12.jar;C:\Users\mroga\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;C:\Users\mroga\.m2\repository\org\mockito\mockito-core\2.7.19\mockito-core-2.7.19.jar;C:\Users\mroga\.m2\repository\net\bytebuddy\byte-buddy\1.6.11\byte-buddy-1.6.11.jar;C:\Users\mroga\.m2\repository\net\bytebuddy\byte-buddy-agent\1.6.11\byte-buddy-agent-1.6.11.jar;C:\Users\mroga\.m2\repository\org\objenesis\objenesis\2.5\objenesis-2.5.jar;"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="sun.boot.library.path" value="C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\bin"/>
+    <property name="java.vm.version" value="25.462-b08"/>
     <property name="java.vm.vendor" value="Amazon.com Inc."/>
-    <property name="sun.arch.data.model" value="64"/>
-    <property name="user.variant" value=""/>
+    <property name="maven.multiModuleProjectDirectory" value="C:\Library_1"/>
     <property name="java.vendor.url" value="https://aws.amazon.com/corretto/"/>
-    <property name="user.timezone" value="Asia/Shanghai"/>
-    <property name="java.vm.specification.version" value="1.8"/>
-    <property name="os.name" value="Windows 11"/>
+    <property name="path.separator" value=";"/>
+    <property name="guice.disable.misplaced.annotation.check" value="true"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="user.script" value=""/>
     <property name="user.country" value="CN"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
-    <property name="sun.boot.library.path" value="C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\bin"/>
-    <property name="sun.java.command" value="C:\Users\mroga\AppData\Local\Temp\surefire7032414702961884101\surefirebooter-20251031003732391_3.jar C:\Users\mroga\AppData\Local\Temp\surefire7032414702961884101 2025-10-31T00-37-32_133-jvmRun1 surefire-20251031003732391_1tmp surefire_0-20251031003732391_2tmp"/>
-    <property name="surefire.test.class.path" value="C:\Users\mroga\Downloads\Library_1\target\test-classes;C:\Users\mroga\Downloads\Library_1\target\classes;C:\Users\mroga\.m2\repository\junit\junit\4.12\junit-4.12.jar;C:\Users\mroga\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;C:\Users\mroga\.m2\repository\org\mockito\mockito-core\2.7.19\mockito-core-2.7.19.jar;C:\Users\mroga\.m2\repository\net\bytebuddy\byte-buddy\1.6.11\byte-buddy-1.6.11.jar;C:\Users\mroga\.m2\repository\net\bytebuddy\byte-buddy-agent\1.6.11\byte-buddy-agent-1.6.11.jar;C:\Users\mroga\.m2\repository\org\objenesis\objenesis\2.5\objenesis-2.5.jar;"/>
-    <property name="sun.cpu.endian" value="little"/>
-    <property name="user.home" value="C:\Users\mroga"/>
-    <property name="user.language" value="zh"/>
-    <property name="java.specification.vendor" value="Oracle Corporation"/>
-    <property name="java.home" value="C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre"/>
-    <property name="basedir" value="C:\Users\mroga\Downloads\Library_1"/>
-    <property name="file.separator" value="\"/>
-    <property name="line.separator" value="&#10;"/>
-    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
-    <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
-    <property name="surefire.real.class.path" value="C:\Users\mroga\AppData\Local\Temp\surefire7032414702961884101\surefirebooter-20251031003732391_3.jar;C:\\Users\\mroga\\.m2\\repository\\org\\jacoco\\org.jacoco.agent\\0.8.7\\org.jacoco.agent-0.8.7-runtime.jar"/>
-    <property name="sun.boot.class.path" value="C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\lib\resources.jar;C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\lib\rt.jar;C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\lib\sunrsasign.jar;C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\lib\jsse.jar;C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\lib\jce.jar;C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\lib\charsets.jar;C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\lib\jfr.jar;C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\classes"/>
-    <property name="user.script" value=""/>
-    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
-    <property name="java.runtime.version" value="1.8.0_462-b08"/>
-    <property name="user.name" value="zuha"/>
-    <property name="path.separator" value=";"/>
-    <property name="os.version" value="10.0"/>
-    <property name="java.endorsed.dirs" value="C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\lib\endorsed"/>
-    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
-    <property name="file.encoding" value="GBK"/>
-    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
-    <property name="localRepository" value="C:\Users\mroga\.m2\repository"/>
-    <property name="java.vendor.url.bug" value="https://github.com/corretto/corretto-8/issues/"/>
-    <property name="java.io.tmpdir" value="C:\Users\mroga\AppData\Local\Temp\"/>
-    <property name="idea.version" value="2023.3.8"/>
-    <property name="java.version" value="1.8.0_462"/>
-    <property name="user.dir" value="C:\Users\mroga\Downloads\Library_1"/>
-    <property name="os.arch" value="amd64"/>
-    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob"/>
     <property name="sun.os.patch.level" value=""/>
-    <property name="java.library.path" value="C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files\Amazon Corretto\jdk1.8.0_462\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files\cursor\resources\app\bin;C:\maven_repos\apache-maven-3.6.3\bin;C:\maven_repos\apache-maven-3.6.3\bin\mvn.cmd;C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\bin;c:\Users\mroga\AppData\Local\Programs\Trae CN\bin;c:\Users\mroga\AppData\Local\Programs\Trae\bin;C:\Users\mroga\AppData\Local\Microsoft\WindowsApps;;C:\Program Files\JetBrains\IntelliJ IDEA 2023.3.8\bin;;C:\Users\mroga\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\mroga\AppData\Local\Programs\Qoder\bin;C:\Users\mroga\AppData\Local\Programs\Lingma\bin;."/>
-    <property name="java.vm.info" value="mixed mode"/>
-    <property name="java.vendor" value="Amazon.com Inc."/>
-    <property name="java.vm.version" value="25.462-b08"/>
-    <property name="java.specification.maintenance.version" value="6"/>
-    <property name="java.ext.dirs" value="C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\lib\ext;C:\WINDOWS\Sun\Java\lib\ext"/>
-    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="C:\Library_1"/>
+    <property name="java.runtime.version" value="1.8.0_462-b08"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
+    <property name="java.endorsed.dirs" value="C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\lib\endorsed"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.io.tmpdir" value="C:\Users\mroga\AppData\Local\Temp\"/>
+    <property name="line.separator" value="
+"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="user.variant" value=""/>
+    <property name="os.name" value="Windows 11"/>
+    <property name="classworlds.conf" value="C:\maven_repos\apache-maven-3.6.3\bin\..\bin\m2.conf"/>
+    <property name="sun.jnu.encoding" value="GBK"/>
+    <property name="java.library.path" value="C:\Program Files\Amazon Corretto\jdk1.8.0_462\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files\Amazon Corretto\jdk1.8.0_462\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files\cursor\resources\app\bin;C:\maven_repos\apache-maven-3.6.3\bin;C:\maven_repos\apache-maven-3.6.3\bin\mvn.cmd;C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\bin;C:\Program Files\Git\cmd;c:\Users\mroga\AppData\Local\Programs\Trae CN\bin;c:\Users\mroga\AppData\Local\Programs\Trae\bin;C:\Users\mroga\AppData\Local\Microsoft\WindowsApps;;C:\Program Files\JetBrains\IntelliJ IDEA 2023.3.8\bin;;C:\Users\mroga\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\mroga\AppData\Local\Programs\Qoder\bin;C:\Users\mroga\AppData\Local\Programs\Lingma\bin;."/>
+    <property name="maven.conf" value="C:\maven_repos\apache-maven-3.6.3\bin\../conf"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.class.version" value="52.0"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="os.version" value="10.0"/>
+    <property name="library.jansi.path" value="C:\maven_repos\apache-maven-3.6.3\bin\..\lib\jansi-native"/>
+    <property name="user.home" value="C:\Users\mroga"/>
+    <property name="user.timezone" value="Asia/Shanghai"/>
+    <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob"/>
+    <property name="java.specification.version" value="1.8"/>
+    <property name="file.encoding" value="GBK"/>
+    <property name="user.name" value="zuha"/>
+    <property name="java.class.path" value="C:\maven_repos\apache-maven-3.6.3\bin\..\boot\plexus-classworlds-2.6.0.jar"/>
+    <property name="java.vm.specification.version" value="1.8"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.home" value="C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher test"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="user.language" value="zh"/>
+    <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.version" value="1.8.0_462"/>
+    <property name="java.ext.dirs" value="C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\lib\ext;C:\WINDOWS\Sun\Java\lib\ext"/>
+    <property name="sun.boot.class.path" value="C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\lib\resources.jar;C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\lib\rt.jar;C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\lib\sunrsasign.jar;C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\lib\jsse.jar;C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\lib\jce.jar;C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\lib\charsets.jar;C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\lib\jfr.jar;C:\Program Files\Amazon Corretto\jdk1.8.0_462\jre\classes"/>
+    <property name="java.vendor" value="Amazon.com Inc."/>
+    <property name="java.specification.maintenance.version" value="6"/>
+    <property name="maven.home" value="C:\maven_repos\apache-maven-3.6.3\bin\.."/>
+    <property name="file.separator" value="\"/>
+    <property name="java.vendor.url.bug" value="https://github.com/corretto/corretto-8/issues/"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="sun.desktop" value="windows"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase name="testReservation_VIPPriority_Bonus" classname="net.mooctest.LibraryTest" time="0.013">
-    <system-out><![CDATA[For VIP users' reservations, the priority is enhanced.
-]]></system-out>
-  </testcase>
-  <testcase name="testBorrowBook_WhenBookAvailable_ShouldSucceed" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:2
-Alicesuccessfully borrowed Java, due date:Fri Nov 14 00:37:33 CST 2025
-]]></system-out>
-  </testcase>
-  <testcase name="testBook_IsAvailable_NoCopies_Println" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testVIPUser_ReturnBook_Overdue_ShouldSetReturnDateAndFinesIncreaseAndCreditMinus3" classname="net.mooctest.LibraryTest" time="0.002">
-    <system-out><![CDATA[Successfully returned the book. Currently available copies for borrowing:1
-]]></system-out>
-  </testcase>
-  <testcase name="testRegularUser_BorrowBook_InventoryInsufficient_Reserved" classname="net.mooctest.LibraryTest" time="0.002">
-    <system-out><![CDATA[There are no available copies.
-]]></system-out>
-  </testcase>
-  <testcase name="testBook_AddReservation_Sysout" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testCreditRepair_WhenVipCreditLow_ShouldRestore" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Credit score increased by 10. Current credit score: 40
-]]></system-out>
-  </testcase>
-  <testcase name="testCancelReservation_WhenBookNotReserved_ShouldThrow" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testInventoryService_ReportDamaged_Positive_ShouldSetRepairAndCharge" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testUser_DeductScore_Logs_FreezeAndDecrease" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testRegularUser_BorrowBook_FineFreezeBranch" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testRegularUser_CalculateDueDate_ShouldBeBorrowPlus14Days" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testNotificationService_EmailSuccess" classname="net.mooctest.LibraryTest" time="0.003">
-    <system-out><![CDATA[Successfully sent email to u@test.com: msg
-]]></system-out>
-  </testcase>
-  <testcase name="testBook_RemoveReservation_Sysout" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[Reservation added successfully.
-]]></system-out>
-  </testcase>
-  <testcase name="testLibrary_BorrowAndReturn_Process" classname="net.mooctest.LibraryTest" time="0.004">
-    <system-out><![CDATA[Successfully added book:MongoDB
-Successfully borrowed the book. Remaining copies:0
-Lukesuccessfully borrowed MongoDB, due date:Fri Nov 14 00:37:33 CST 2025
-Successfully returned the book. Currently available copies for borrowing:1
-]]></system-out>
-  </testcase>
-  <testcase name="testVIPUser_ExtendBorrowPeriod_NoRecord_ShouldThrow" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testUser_DeductScore_BecomeFifty_ShouldNotFreeze" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Credit score decreased by 5. Current credit score: 50
-]]></system-out>
-  </testcase>
-  <testcase name="testRegularUser_BorrowBook_ReserveBranch_WithMockedAvailability" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testBorrowBook_WhenAccountFrozen_ShouldThrowAccountFrozenException" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testVIPUser_BorrowBook_LowCredit" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testRegularUser_ReturnBook_OverdueAndFreeze" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:0
-lateBacksuccessfully borrowed B, due date:Fri Nov 14 00:37:33 CST 2025
-Successfully returned the book. Currently available copies for borrowing:1
-[DEBUG] Returned creditScore=73, status=ACTIVE
-]]></system-out>
-  </testcase>
-  <testcase name="testRegularUser_ReturnBook_OverdueAndFrozen" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:1
-lateUsersuccessfully borrowed B5, due date:Fri Nov 14 00:37:33 CST 2025
-Successfully returned the book. Currently available copies for borrowing:2
-]]></system-out>
-  </testcase>
-  <testcase name="testAutoRenewalService_RenewUnavailable_ShouldThrow" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:0
-Stevesuccessfully borrowed TypeScript, due date:Fri Nov 14 00:37:33 CST 2025
-Reservation added successfully.
-]]></system-out>
-  </testcase>
-  <testcase name="testCustomException_Message" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testVIPUser_ReturnBook_OnTime_ShouldIncreaseCopiesAndCreditPlus3" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Successfully returned the book. Currently available copies for borrowing:1
-]]></system-out>
-  </testcase>
-  <testcase name="testLibrary_ProcessReservations_WithQueue_BorrowAndNotify" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Reservation added successfully.
-]]></system-out>
-  </testcase>
-  <testcase name="testReservation_WhenReserveTwice_ShouldThrow" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[Reservation added successfully.
-]]></system-out>
-  </testcase>
-  <testcase name="testBook_ReturnBook_Success_Println" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:1
-]]></system-out>
-  </testcase>
-  <testcase name="testUser_AddScore_Log" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testBorrowRecord_CalculateFine_RareAndJournal" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testUser_ReceiveNotification_Logs" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testInventoryService_ReportDamaged_WithoutBorrowing_ShouldThrow" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testRegularUser_ReturnBook_OnTimeShouldAddCredit" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:1
-ontimesuccessfully borrowed B6, due date:Fri Nov 14 00:37:33 CST 2025
-Successfully returned the book. Currently available copies for borrowing:2
-]]></system-out>
-  </testcase>
-  <testcase name="testVIPUser_BorrowBook_WhenBlacklisted_ShouldThrow" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testInventoryService_ReportLost_WithoutBorrowing_ShouldThrow" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testRegularUser_ReturnBook_Overdue_LogAndFine" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testLibrary_AutoRenew_Success_LogOnly" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:0
-AR_SUCCsuccessfully borrowed AR_S, due date:Fri Nov 14 00:37:33 CST 2025
-]]></system-out>
-  </testcase>
-  <testcase name="testBook_GetTitle_NotNull" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testVIPUser_ExtendBorrowPeriod_SuccessThenAlreadyRenewed" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[The borrowing period has been extended to:Sun Dec 07 00:37:33 CST 2025
-]]></system-out>
-  </testcase>
-  <testcase name="testLibrary_AddBook_Exist_Success" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Successfully added book:LibBook
-This book already exists.
-]]></system-out>
-  </testcase>
-  <testcase name="testLibrary_ReportLostBook_Success_SideEffects" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testRegularUser_BorrowBook_FinesOver50_FrozeAndException" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testVIPUser_BorrowBook_FinesEqual50_ShouldAllow" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:0
-VIPB50 Successfully borrowed B50. Due date: Sun Nov 30 00:37:33 CST 2025
-]]></system-out>
-  </testcase>
-  <testcase name="testPayFine_WhenAmountGreaterThanFines_ShouldThrow" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testLibrary_RepairUserCredit_Success_And_Fail" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Credit repair failed: The minimum payment amount is 10 yuan.
-Credit score increased by 10. Current credit score: 110
-User credit repair is successful. Current credit score:110
-]]></system-out>
-  </testcase>
-  <testcase name="testExternalLibraryAPI_RequestBook_Println" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testLibrary_AddBook_LogBranches" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testVIPUser_CalculateDueDate_ShouldMatchBorrowPlusPeriod" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testBorrowRecord_WhenOverdueOrNot_ShouldJudgeCorrectly" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testExternalLibraryAPI_RequestBook_LogBranch" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Request successful: Borrow books from the external library. [BookTest]，User ID:Utest
-]]></system-out>
-  </testcase>
-  <testcase name="testLibrary_ReportDamagedBook_Success_SideEffects" classname="net.mooctest.LibraryTest" time="0.001"/>
-  <testcase name="testLibrary_ProcessReservations_BorrowThrows" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Reservation added successfully.
-]]></system-out>
-  </testcase>
-  <testcase name="testBook_RemoveReservation_Existing" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[Reservation added successfully.
-Reservation cancelled successfully.
-]]></system-out>
-  </testcase>
-  <testcase name="testNotificationService_EmailFail_SmsSuccess_Log" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testRegularUser_FindBorrowRecord_NotFoundAndNull" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testPayFine_WhenUserBlacklisted_ShouldThrow" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testLibrary_ProcessReservations_ShouldSendEmailNotification" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[Reservation added successfully.
-]]></system-out>
-  </testcase>
-  <testcase name="testRegularUser_BorrowBook_InventoryEmpty_ReserveBranch" classname="net.mooctest.LibraryTest" time="0.002">
-    <system-out><![CDATA[There are no available copies.
-]]></system-out>
-  </testcase>
-  <testcase name="testAutoRenewalService_CreditBoundary60_ShouldAllow" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:0
-AR_B60successfully borrowed AR_B, due date:Fri Nov 14 00:37:33 CST 2025
-The borrowing period has been extended to:Fri Nov 28 00:37:33 CST 2025
-]]></system-out>
-  </testcase>
-  <testcase name="testCreditRepairService_Repair" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[Credit score increased by 10. Current credit score: 50
-]]></system-out>
-  </testcase>
-  <testcase name="testLibrary_AutoRenewBook_BothBranches" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:0
-AUUsuccessfully borrowed AutoR, due date:Fri Nov 14 00:37:33 CST 2025
-]]></system-out>
-  </testcase>
-  <testcase name="testRegularUser_BorrowBook_FinesExactly50_AllowBorrow" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:1
-reg50successfully borrowed B1, due date:Fri Nov 14 00:37:33 CST 2025
-]]></system-out>
-  </testcase>
-  <testcase name="testReceiveNotification_WhenBlacklistedUser_NoNotify" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Blacklisted users cannot receive notifications.
-]]></system-out>
-  </testcase>
-  <testcase name="testVIPUser_ReturnBook_FinesBoundary" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[Successfully returned the book. Currently available copies for borrowing:1
-Successfully returned the book. Currently available copies for borrowing:1
-]]></system-out>
-  </testcase>
-  <testcase name="testCreditRepairService_PaymentBoundaryAndAccountRestore" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Credit score increased by 10. Current credit score: 70
-]]></system-out>
-  </testcase>
-  <testcase name="testUser_ReserveBook_CreditEqual50_Available_ShouldSucceed" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Reservation added successfully.
-]]></system-out>
-  </testcase>
-  <testcase name="testPayFine_WhenFineBecomesZeroAndFrozen_ShouldRestoreAccount" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[Paid a fine of 10.0 yuan.
-The fine has been cleared and the account status is restored.
-]]></system-out>
-  </testcase>
-  <testcase name="testReserveBook_WhenCreditScoreBelowFifty_ShouldThrow" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testAddScore_WhenBlacklistedUser_ShouldThrow" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testBook_Borrow_Success_Println" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testUser_PayFine_RemainingFineElseBranch" classname="net.mooctest.LibraryTest" time="0.002">
-    <system-out><![CDATA[Paid a fine of 10.0 yuan.
-There is still a fine of 10.0 yuan to be paid.
-]]></system-out>
-  </testcase>
-  <testcase name="testBorrowRecord_ExtendDueDateShouldChangeDueDate" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[The borrowing period has been extended to:Sat Nov 08 00:37:33 CST 2025
-]]></system-out>
-  </testcase>
-  <testcase name="testAutoRenewalService_CreditBelow60_ShouldThrow" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:0
-AR_LOWsuccessfully borrowed AR_L, due date:Fri Nov 14 00:37:33 CST 2025
-]]></system-out>
-  </testcase>
-  <testcase name="testLibrary_AutoRenew_Fail_LogOnly" classname="net.mooctest.LibraryTest" time="0.002">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:0
-AR_FAILsuccessfully borrowed AR_F, due date:Fri Nov 14 00:37:33 CST 2025
-Reservation added successfully.
-]]></system-out>
-  </testcase>
-  <testcase name="testLibrary_RegisterUser_LowCredit_Duplicate_Success" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Credit score is too low to register a user.
-Successfully registered user:LUser
-User already exists.
-]]></system-out>
-  </testcase>
-  <testcase name="testNotificationService_EmailAndSmsFail_AppNotify_Log_NullPhone" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testUser_CancelReservation_Success_ShouldRemoveBoth" classname="net.mooctest.LibraryTest" time="0.002">
-    <system-out><![CDATA[Reservation added successfully.
-Reservation cancelled successfully.
-]]></system-out>
-  </testcase>
-  <testcase name="testBook_ReportDamage_Sysout" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testUser_PayFine_Logs_Remaining" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testRegularUser_ReturnBook_Overdue_Deduct5_And_FreezeWhenBelow50" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[Successfully returned the book. Currently available copies for borrowing:1
-Return the book11days overdue and calculate the fine.
-]]></system-out>
-  </testcase>
-  <testcase name="testUser_PayFine_Logs_ClearedAndRestore" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testDeductScore_WhenNegativeAndBoundary" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[The credit score is too low. The account has been frozen.
-Credit score decreased by 30. Current credit score: 30
-The credit score is too low. The account has been frozen.
-Credit score decreased by 40. Current credit score: 0
-]]></system-out>
-  </testcase>
-  <testcase name="testPayFine_WhenNegativeAndBoundary" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Paid a fine of -2.0 yuan.
-]]></system-out>
-  </testcase>
-  <testcase name="testRegularUser_BorrowBook_CreditScoreBoundary" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:1
-credEdgesuccessfully borrowed B44, due date:Fri Nov 14 00:37:33 CST 2025
-]]></system-out>
-  </testcase>
-  <testcase name="testBook_IsAvailable_WhenDamagedShouldReturnFalse" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[The book is damaged and cannot be borrowed.
-]]></system-out>
-  </testcase>
-  <testcase name="testUser_ReserveBook_Unavailable_Log" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testNotificationService_Blacklisted_ShouldOnlyLogAndReturn" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testLibrary_AutoRenew_Success_And_Fail" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:0
-Autosuccessfully borrowed AR, due date:Fri Nov 14 00:37:33 CST 2025
-The borrowing period has been extended to:Fri Nov 28 00:37:33 CST 2025
-Successfully automatically renewed book:AR
-Reservation added successfully.
-Automatic renewal failed:The book has been reserved by other users and cannot be renewed.
-]]></system-out>
-  </testcase>
-  <testcase name="testUser_ReceiveNotification_Normal" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[Notify user [Notify]: hello
-]]></system-out>
-  </testcase>
-  <testcase name="testBaseUser_FindBorrowRecord_PositiveAndNull" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testVIPUser_BorrowBook_ReachLimit" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:1
-VIPMAX Successfully borrowed B0. Due date: Sun Nov 30 00:37:33 CST 2025
-Successfully borrowed the book. Remaining copies:1
-VIPMAX Successfully borrowed B1. Due date: Sun Nov 30 00:37:33 CST 2025
-Successfully borrowed the book. Remaining copies:1
-VIPMAX Successfully borrowed B2. Due date: Sun Nov 30 00:37:33 CST 2025
-Successfully borrowed the book. Remaining copies:1
-VIPMAX Successfully borrowed B3. Due date: Sun Nov 30 00:37:33 CST 2025
-Successfully borrowed the book. Remaining copies:1
-VIPMAX Successfully borrowed B4. Due date: Sun Nov 30 00:37:33 CST 2025
-Successfully borrowed the book. Remaining copies:1
-VIPMAX Successfully borrowed B5. Due date: Sun Nov 30 00:37:33 CST 2025
-Successfully borrowed the book. Remaining copies:1
-VIPMAX Successfully borrowed B6. Due date: Sun Nov 30 00:37:33 CST 2025
-Successfully borrowed the book. Remaining copies:1
-VIPMAX Successfully borrowed B7. Due date: Sun Nov 30 00:37:33 CST 2025
-Successfully borrowed the book. Remaining copies:1
-VIPMAX Successfully borrowed B8. Due date: Sun Nov 30 00:37:33 CST 2025
-Successfully borrowed the book. Remaining copies:1
-VIPMAX Successfully borrowed B9. Due date: Sun Nov 30 00:37:33 CST 2025
-]]></system-out>
-  </testcase>
-  <testcase name="testLibrary_ProcessReservations_EmptyQueue" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testGetEmail_GetPhoneNumber_KillNull" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testSearchBook_WhenExistOrNot_ShouldReturnCorrectly" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Successfully added book:Go
-]]></system-out>
-  </testcase>
-  <testcase name="testUser_ReserveBook_Frozen_ShouldThrow" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testBaseUser_ReceiveNotification_BlkAndNormal" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Blacklisted users cannot receive notifications.
-Notify user [U]: m
-]]></system-out>
-  </testcase>
-  <testcase name="testBorrowRecord_CalculateFine_BlacklistedFineDouble" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[The user has been blacklisted and the fine is doubled.
-The user has been blacklisted and the fine is doubled.
-]]></system-out>
-  </testcase>
-  <testcase name="testNotificationService_EmailFail_SmsSuccess" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Email sending failed. Try sending a text message...
-Successfully sent text message to.13800000000: msg
-]]></system-out>
-  </testcase>
-  <testcase name="testNotificationService_EmailSuccess_Log" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testVIPUser_ReturnBook_OverdueFineDeduct" classname="net.mooctest.LibraryTest" time="0.002">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:0
-VIPR Successfully borrowed B2. Due date: Sun Nov 30 00:37:33 CST 2025
-Successfully returned the book. Currently available copies for borrowing:1
-[DEBUG] VIP returned, creditScore=57, status=ACTIVE
-]]></system-out>
-  </testcase>
-  <testcase name="testRegularUser_BorrowBook_TryRare" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testLibrary_RegisterUser_CreditBoundary50_ShouldRegister" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testRegularUser_BorrowBook_CreditLow" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testLibrary_RepairUserCredit_LogBranches" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testBook_IsAvailable_InRepair_Println" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testLibrary_ProcessReservations_BookUnavailable_ReturnEarly" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testExternalLibraryAPI_CheckAvailability_MultiCalls_WithPrintln" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testBook_IsAvailable_Damaged_Println" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testInventoryService_ReportLost_Positive_ShouldUpdateInventoryAndCharge" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testBorrowBook_WhenCreditLow_ShouldThrowInsufficientCreditException" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testBook_IsAvailable_WhenInRepairShouldReturnFalse" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[The book is under repair and temporarily unavailable.
-]]></system-out>
-  </testcase>
-  <testcase name="testExternalLibraryAPI_CheckAvailability_BothOutcomes" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Check the availability of books in the external library system...
-Check the availability of books in the external library system...
-]]></system-out>
-  </testcase>
-  <testcase name="testLibrary_RegisterUser_LogBranches" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testBorrowBook_WhenRegularUserVsVipUser_TypeLimitations" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:0
-Grace Successfully borrowed RareBook. Due date: Sun Nov 30 00:37:33 CST 2025
-]]></system-out>
-  </testcase>
-  <testcase name="testNotificationService_WhenEmailAndSmsInvalid_ShouldThrow" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Email sending failed. Try sending a text message...
-Text message sending failed. Try using in-app notifications...
-Send an in-app notification to the user. [Quinn]: Test message
-]]></system-out>
-  </testcase>
-  <testcase name="testReservation_DelayedReturn_LowersPriority" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[Delayed return records will lower the reservation priority.
-]]></system-out>
-  </testcase>
-  <testcase name="testReturnBook_WhenOverdue_ShouldThrowOverdueFineException" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:0
-Marysuccessfully borrowed Docker, due date:Fri Nov 14 00:37:33 CST 2025
-Successfully returned the book. Currently available copies for borrowing:1
-]]></system-out>
-  </testcase>
-  <testcase name="testAutoRenewalService_Success_ExactPlus14Days" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:0
-AR_EXACTsuccessfully borrowed ARX_B, due date:Fri Nov 14 00:37:33 CST 2025
-The borrowing period has been extended to:Fri Nov 28 00:37:33 CST 2025
-]]></system-out>
-  </testcase>
-  <testcase name="testBorrowBook_WhenBookOutOfStock_ShouldThrowBookNotAvailableException" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[There are no available copies.
-]]></system-out>
-  </testcase>
-  <testcase name="testExternalLibraryAPI_CheckAvailability_Random" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[Check the availability of books in the external library system...
-]]></system-out>
-  </testcase>
-  <testcase name="testReservation_Blacklisted_ReturnsMinusOne" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[Blacklisted users cannot reserve books.
-]]></system-out>
-  </testcase>
-  <testcase name="testRegularUser_ReturnBook_FinesExceed100_ShouldFreezeAndThrow" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[Successfully returned the book. Currently available copies for borrowing:1
-Return the book16days overdue and calculate the fine.
-]]></system-out>
-  </testcase>
-  <testcase name="testExternalLibraryAPI_CheckAvailability_Println" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testBook_ReportDamage_Twice" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Report book damage.
-This book is damaged. No need to report it again.
-]]></system-out>
-  </testcase>
-  <testcase name="testVIPUser_BorrowBook_CreditEqual50_ShouldAllow" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:0
-VIPC50 Successfully borrowed C50. Due date: Sun Nov 30 00:37:33 CST 2025
-]]></system-out>
-  </testcase>
-  <testcase name="testBorrowRecord_CalculateFine_DamagedBook" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[The book is damaged. An additional fine of 50 yuan is imposed.
-The book is damaged. An additional fine of 50 yuan is imposed.
-]]></system-out>
-  </testcase>
-  <testcase name="testBorrowBook_WhenExceedLimit_ShouldThrowInvalidOperationException" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:1
-Jacksuccessfully borrowed Book0, due date:Fri Nov 14 00:37:33 CST 2025
-Successfully borrowed the book. Remaining copies:1
-Jacksuccessfully borrowed Book1, due date:Fri Nov 14 00:37:33 CST 2025
-Successfully borrowed the book. Remaining copies:1
-Jacksuccessfully borrowed Book2, due date:Fri Nov 14 00:37:33 CST 2025
-Successfully borrowed the book. Remaining copies:1
-Jacksuccessfully borrowed Book3, due date:Fri Nov 14 00:37:33 CST 2025
-Successfully borrowed the book. Remaining copies:1
-Jacksuccessfully borrowed Book4, due date:Fri Nov 14 00:37:33 CST 2025
-]]></system-out>
-  </testcase>
-  <testcase name="testVIPUser_BorrowBook_FineFreezeOverdue" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testBook_Return_WhenAllCopiesInLibrary_ShouldThrow" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testBook_ReportRepair_Sysout" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testReserveBook_WhenBookUnavailable_AddToQueue" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[There are no available copies.
-The book is unavailable and has been added to the reservation queue.
-Reservation added successfully.
-]]></system-out>
-  </testcase>
-  <testcase name="testLibrary_ReportLostAndDamaged_FailBranches" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testVIPUser_BorrowBook_ShouldIncreaseCreditBy2" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:0
-VIPAdd Successfully borrowed Add. Due date: Sun Nov 30 00:37:33 CST 2025
-]]></system-out>
-  </testcase>
-  <testcase name="testAutoRenewal_WhenEligible_ShouldSucceed" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:1
-Evesuccessfully borrowed Scala, due date:Fri Nov 14 00:37:33 CST 2025
-The borrowing period has been extended to:Fri Nov 28 00:37:33 CST 2025
-]]></system-out>
-  </testcase>
-  <testcase name="testVIPUser_FindBorrowRecord_NotFound" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testRegularUser_BorrowBook_WhenBlacklisted_ShouldThrow" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testVIPUser_ReturnBook_NotBorrowed_ShouldThrow" classname="net.mooctest.LibraryTest" time="0.0"/>
-  <testcase name="testBook_RemoveReservation_NotInQueue_ShouldLog" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[This reservation is not in the reservation queue.
-]]></system-out>
-  </testcase>
-  <testcase name="testBook_ReportRepair_Twice" classname="net.mooctest.LibraryTest" time="0.0">
-    <system-out><![CDATA[Report book repair.
-The book is already under repair.
-]]></system-out>
-  </testcase>
-  <testcase name="testRegularUser_BorrowBook_ShouldIncreaseCreditBy1" classname="net.mooctest.LibraryTest" time="0.001">
-    <system-out><![CDATA[Successfully borrowed the book. Remaining copies:0
-RU_ADD1successfully borrowed NB, due date:Fri Nov 14 00:37:33 CST 2025
-]]></system-out>
-  </testcase>
+  <testcase classname="net.mooctest.LibraryTest" name="testReservation_VIPPriority_Bonus" time="0.082"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBorrowBook_WhenBookAvailable_ShouldSucceed" time="0.018"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBook_IsAvailable_NoCopies_Println" time="0.005"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testReservation_VIPWithDelayedReturn_PriorityCalculation" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testVIPUser_ReturnBook_Overdue_ShouldSetReturnDateAndFinesIncreaseAndCreditMinus3" time="0.011"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_BorrowBook_InventoryInsufficient_Reserved" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testAutoRenewalService_CreditScoreExactly60_ShouldAllow" time="0.002"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBook_AddReservation_Sysout" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_ReturnBook_OverdueDaysCalculation_Exact" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testCreditRepair_WhenVipCreditLow_ShouldRestore" time="0.002"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testCancelReservation_WhenBookNotReserved_ShouldThrow" time="0.001"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testCreditRepairService_PaymentJustBelow10_ShouldThrow" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testInventoryService_ReportDamaged_Positive_ShouldSetRepairAndCharge" time="0.012"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testUser_DeductScore_Logs_FreezeAndDecrease" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_BorrowBook_FineFreezeBranch" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_CalculateDueDate_ShouldBeBorrowPlus14Days" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testNotificationService_EmailSuccess" time="0.003"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBook_RemoveReservation_Sysout" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBorrowRecord_ExtendDueDate_ShouldPrintNewDueDate" time="0.001"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testLibrary_BorrowAndReturn_Process" time="0.003"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testAutoRenewalService_CreditScoreBelow60_ShouldThrow" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testVIPUser_ExtendBorrowPeriod_NoRecord_ShouldThrow" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testUser_DeductScore_BecomeFifty_ShouldNotFreeze" time="0.002"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_BorrowBook_ReserveBranch_WithMockedAvailability" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_ReturnBook_Exactly15Days_ShouldBeOverdue" time="0.005"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBorrowBook_WhenAccountFrozen_ShouldThrowAccountFrozenException" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testVIPUser_BorrowBook_LowCredit" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_ReturnBook_OverdueAndFreeze" time="0.002"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_ReturnBook_OverdueAndFrozen" time="0.001"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testReservation_MultipleDelayedReturns_CumulativePenalty" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testAutoRenewalService_RenewUnavailable_ShouldThrow" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testReservation_GetUser_ReturnsCorrectUser" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testCustomException_Message" time="0.002"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testVIPUser_ReturnBook_OnTime_ShouldIncreaseCopiesAndCreditPlus3" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testLibrary_ProcessReservations_WithQueue_BorrowAndNotify" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_ReturnBook_Fines101_ShouldFreezeAndThrow" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testReservation_WhenReserveTwice_ShouldThrow" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBook_ReturnBook_Success_Println" time="0.001"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testUser_AddScore_Log" time="0.001"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBorrowRecord_CalculateFine_RareAndJournal" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testUser_ReceiveNotification_Logs" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testInventoryService_ReportDamaged_WithoutBorrowing_ShouldThrow" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_ReturnBook_OnTimeShouldAddCredit" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testVIPUser_BorrowBook_WhenBlacklisted_ShouldThrow" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testInventoryService_ReportLost_WithoutBorrowing_ShouldThrow" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_ReturnBook_Overdue_LogAndFine" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testLibrary_AutoRenew_Success_LogOnly" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBorrowRecord_BlacklistedUserWithDamagedRareBook_MaximumFine" time="0.008"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBook_GetTitle_NotNull" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testVIPUser_ExtendBorrowPeriod_SuccessThenAlreadyRenewed" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testLibrary_AddBook_Exist_Success" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testLibrary_ReportDamagedBook_ExceptionHandling_ShouldPrintError" time="0.001"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testUser_DeductScore_AlreadyZero_ShouldNotChange" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testLibrary_ReportLostBook_Success_SideEffects" time="0.002"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testLibrary_ReportLostBook_ExceptionHandling_ShouldPrintError" time="0.001"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_ReturnBook_CreditScoreBelow50_ShouldFreeze" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_BorrowBook_FinesOver50_FrozeAndException" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testVIPUser_BorrowBook_FinesEqual50_ShouldAllow" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testPayFine_WhenAmountGreaterThanFines_ShouldThrow" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testLibrary_RepairUserCredit_Success_And_Fail" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testExternalLibraryAPI_RequestBook_Println" time="0.001"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testLibrary_AddBook_LogBranches" time="0.001"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_ReturnBook_BorrowDurationCalculation_ExactDays" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testVIPUser_CalculateDueDate_ShouldMatchBorrowPlusPeriod" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBorrowRecord_WhenOverdueOrNot_ShouldJudgeCorrectly" time="0.009"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testExternalLibraryAPI_RequestBook_LogBranch" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testLibrary_ReportDamagedBook_Success_SideEffects" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testLibrary_ProcessReservations_BorrowThrows" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBook_RemoveReservation_Existing" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_ReturnBook_BorrowDurationFormula_MultipleScenarios" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testNotificationService_EmailFail_SmsSuccess_Log" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_FindBorrowRecord_NotFoundAndNull" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testPayFine_WhenUserBlacklisted_ShouldThrow" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testLibrary_ProcessReservations_ShouldSendEmailNotification" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testVIPUser_BorrowBook_Success_ShouldPrintSuccessMessage" time="0.001"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_BorrowBook_InventoryEmpty_ReserveBranch" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testReservation_VIPUser_ShouldPrintPriorityEnhanced" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testAutoRenewalService_CreditBoundary60_ShouldAllow" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testCreditRepairService_Repair" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testLibrary_AutoRenewBook_BothBranches" time="0.002"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_ReturnBook_FinesExactly100_ShouldNotFreeze" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_BorrowBook_FinesExactly50_AllowBorrow" time="0.006"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testReceiveNotification_WhenBlacklistedUser_NoNotify" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testVIPUser_ReturnBook_FinesBoundary" time="0.001"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testCreditRepairService_PaymentBoundaryAndAccountRestore" time="0.001"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testUser_ReserveBook_CreditEqual50_Available_ShouldSucceed" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testPayFine_WhenFineBecomesZeroAndFrozen_ShouldRestoreAccount" time="0.004"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testInventoryService_ReportDamaged_ShouldSetBookInRepair" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testReserveBook_WhenCreditScoreBelowFifty_ShouldThrow" time="0.001"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBorrowRecord_DamagedBook_ShouldPrintAdditionalFine" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testAddScore_WhenBlacklistedUser_ShouldThrow" time="0.001"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBook_Borrow_Success_Println" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testUser_PayFine_RemainingFineElseBranch" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testCreditRepairService_PaymentExactly10_ShouldSucceed" time="0.001"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testReservation_RegularUserNoDelay_NormalPriority" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBorrowRecord_ExtendDueDateShouldChangeDueDate" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testAutoRenewalService_BoundaryConditions_Comprehensive" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testAutoRenewalService_CreditBelow60_ShouldThrow" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testLibrary_AutoRenew_Fail_LogOnly" time="0.003"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testLibrary_RegisterUser_LowCredit_Duplicate_Success" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testNotificationService_EmailAndSmsFail_AppNotify_Log_NullPhone" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testUser_CancelReservation_Success_ShouldRemoveBoth" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testCreditRepairService_CreditScoreExactly60_ShouldRestoreActive" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBook_ReportDamage_Sysout" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testUser_PayFine_Logs_Remaining" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_ReturnBook_Overdue_Deduct5_And_FreezeWhenBelow50" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testUser_PayFine_Logs_ClearedAndRestore" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testDeductScore_WhenNegativeAndBoundary" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testCreditRepairService_MultiplePayments_CumulativeScore" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testPayFine_WhenNegativeAndBoundary" time="0.001"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_BorrowBook_CreditScoreBoundary" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBook_IsAvailable_WhenDamagedShouldReturnFalse" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testUser_ReserveBook_Unavailable_Log" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testNotificationService_Blacklisted_ShouldOnlyLogAndReturn" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testLibrary_AutoRenew_Success_And_Fail" time="0.001"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testUser_ReceiveNotification_Normal" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBaseUser_FindBorrowRecord_PositiveAndNull" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testVIPUser_BorrowBook_ReachLimit" time="0.009"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testLibrary_ProcessReservations_EmptyQueue" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testGetEmail_GetPhoneNumber_KillNull" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_ReturnBook_CreditScoreExactly50_ShouldNotFreeze" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testSearchBook_WhenExistOrNot_ShouldReturnCorrectly" time="0.007"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testUser_ReserveBook_Frozen_ShouldThrow" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testAutoRenewalService_AccountNotActive_ShouldThrow" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBaseUser_ReceiveNotification_BlkAndNormal" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBorrowRecord_Getters_ReturnCorrectValues" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBorrowRecord_CalculateFine_BlacklistedFineDouble" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testNotificationService_EmailFail_SmsSuccess" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testNotificationService_EmailSuccess_Log" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testVIPUser_ReturnBook_OverdueFineDeduct" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testReservation_DelayedReturn_ShouldPrintPriorityLowered" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testReservation_GetBook_ReturnsCorrectBook" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_BorrowBook_TryRare" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testReservation_BlacklistedUser_ShouldPrintCannotReserve" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testLibrary_RegisterUser_CreditBoundary50_ShouldRegister" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_BorrowBook_CreditLow" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBorrowRecord_NoReturnOrOnTime_NoFine" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testLibrary_RepairUserCredit_LogBranches" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBook_IsAvailable_InRepair_Println" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testLibrary_ProcessReservations_BookUnavailable_ReturnEarly" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testExternalLibraryAPI_CheckAvailability_MultiCalls_WithPrintln" time="0.007"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBook_IsAvailable_Damaged_Println" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testCreditRepairService_CreditScoreBelow60_ShouldNotRestoreActive" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testInventoryService_ReportLost_Positive_ShouldUpdateInventoryAndCharge" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBorrowBook_WhenCreditLow_ShouldThrowInsufficientCreditException" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBook_IsAvailable_WhenInRepairShouldReturnFalse" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testCreditRepairService_PaymentCalculation_ExactDivision" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testExternalLibraryAPI_CheckAvailability_BothOutcomes" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBorrowRecord_JournalBook_CorrectBaseFine" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testLibrary_RegisterUser_LogBranches" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBorrowBook_WhenRegularUserVsVipUser_TypeLimitations" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBorrowRecord_BlacklistedUser_ShouldPrintFineDoubled" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testNotificationService_WhenEmailAndSmsInvalid_ShouldThrow" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testReservation_DelayedReturn_LowersPriority" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testReturnBook_WhenOverdue_ShouldThrowOverdueFineException" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testAutoRenewalService_Success_ExactPlus14Days" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBorrowBook_WhenBookOutOfStock_ShouldThrowBookNotAvailableException" time="0.001"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testAutoRenewalService_Success_ExtendBy14Days" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testAutoRenewalService_BookReserved_ShouldThrow" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testExternalLibraryAPI_CheckAvailability_Random" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testReservation_Blacklisted_ReturnsMinusOne" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBorrowRecord_ExtendDueDate_ExactDays" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_ReturnBook_FinesExceed100_ShouldFreezeAndThrow" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testExternalLibraryAPI_CheckAvailability_Println" time="0.001"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBook_ReportDamage_Twice" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testAutoRenewalService_NoRecord_ShouldThrow" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testVIPUser_BorrowBook_CreditEqual50_ShouldAllow" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBorrowRecord_CalculateFine_DamagedBook" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBorrowBook_WhenExceedLimit_ShouldThrowInvalidOperationException" time="0.003"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testVIPUser_BorrowBook_FineFreezeOverdue" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBook_Return_WhenAllCopiesInLibrary_ShouldThrow" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBook_ReportRepair_Sysout" time="0.001"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testReserveBook_WhenBookUnavailable_AddToQueue" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testLibrary_ReportLostAndDamaged_FailBranches" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testCreditRepairService_CreditScoreAbove60_ShouldRestoreActive" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testVIPUser_BorrowBook_ShouldIncreaseCreditBy2" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testAutoRenewal_WhenEligible_ShouldSucceed" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testVIPUser_FindBorrowRecord_NotFound" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testExternalLibraryAPI_CheckAvailability_ReturnValueUsed" time="0.036"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_BorrowBook_WhenBlacklisted_ShouldThrow" time="0.001"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_ReturnBook_ExactlyOnTime_14Days_NoOverdue" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testVIPUser_ReturnBook_NotBorrowed_ShouldThrow" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBook_RemoveReservation_NotInQueue_ShouldLog" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testBook_ReportRepair_Twice" time="0"/>
+  <testcase classname="net.mooctest.LibraryTest" name="testRegularUser_BorrowBook_ShouldIncreaseCreditBy1" time="0"/>
 </testsuite>
